@@ -1,0 +1,32 @@
+{
+  "name": "@sqrls/tinyjwt",
+  "version": "0.1.0",
+  "description": "A tiny JWT signer and validator",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest",
+    "test:coverage": "jest --coverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/just-squirrels/tinyjwt.git"
+  },
+  "keywords": [
+    "node",
+    "jwt"
+  ],
+  "author": "just squirrels",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/just-squirrels/tinyjwt/issues"
+  },
+  "homepage": "https://github.com/just-squirrels/tinyjwt#readme",
+  "devDependencies": {
+    "@jest/globals": "^29.5.0",
+    "@tsconfig/node18": "^2.0.1",
+    "@types/node": "^20.1.7",
+    "ts-jest": "^29.1.0",
+    "typescript": "^5.0.4"
+  }
+}
