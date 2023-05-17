@@ -7,11 +7,11 @@ type Header = {
 
 export type Claims<T = void> = {
     sub: string;
-    exp: number;
     iss?: string;
     aud?: string;
     nbf?: number;
     iat?: number;
+    exp?: number;
 } & T;
 
 const encode = (part: any) => Buffer.from(JSON.stringify(part)).toString("base64url");
@@ -40,7 +40,7 @@ export function verify<T>(jwt: string, getKey: (keyId?: string) => string) {
     if (signature !== parts[2]) { return; }
 
     const content = decode(parts[1]) as Claims<T>;
-    if (content.exp < Date.now()) { return; }
+    if (content.exp && content.exp < Date.now()) { return; }
     if (content.nbf && content.nbf > Date.now()) { return; }
 
     return content;

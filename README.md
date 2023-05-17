@@ -2,7 +2,7 @@
 A little scrappy JWT helper.
 
 ## Use
-Add keys. Sign or verify. Sorta fits [RFC7519](https://www.rfc-editor.org/rfc/rfc7519). Example (TypeScript):
+Add keys. Sign or verify. Sorta fits [RFC7519](https://www.rfc-editor.org/rfc/rfc7519). Only supports `sha256`. Example (TypeScript):
 
 ```typescript
 import { sign, verify } from "@sqrls/tinyjwt"
@@ -22,5 +22,7 @@ if (!contents) {
 
 // Don't care about key IDs? They're optional
 const jwt = sign({ sub: "bob", exp: Date.now() + 23, other: "data" }, "super secret");
-const contents = verify(jwt, () => "super secret")
+const contents = verify(jwt, () => "super secret");
 ```
+
+If either `exp` or `nbf` are present, they are checked and the JWT rejected appropriately.
