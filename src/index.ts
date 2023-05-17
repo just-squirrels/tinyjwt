@@ -5,14 +5,14 @@ type Header = {
     kid: string;
 }
 
-export type Claims<T = void> = {
+export type Claims = {
     sub: string;
     iss?: string;
     aud?: string;
     nbf?: number;
     iat?: number;
     exp?: number;
-} & T;
+};
 
 const encode = (part: any) => Buffer.from(JSON.stringify(part)).toString("base64url");
 const decode = (part: any) => JSON.parse(Buffer.from(part, "base64url").toString());
@@ -23,14 +23,14 @@ function gensig(header: string, content: string, key: string) {
     return hmac.digest("base64url");
 }
 
-export function sign<T>(claims: Claims<T>, key: string, keyId?: string) {
+export function sign<T extends Claims = Claims>(claims: T, key: string, keyId?: string) {
     const header = encode({ alg: "sha256", kid: keyId });
     const content = encode(claims);
     const signature = gensig(header, content, key);
     return `${header}.${content}.${signature}`;
 }
 
-export function verify<T>(jwt: string, getKey: (keyId?: string) => string) {
+export function verify<T extends Claims = Claims>(jwt: string, getKey: (keyId?: string) => string) {
     const parts = jwt.split(".");
     const header = decode(parts[0]) as Header;
     const key = getKey(header.kid);
@@ -39,7 +39,7 @@ export function verify<T>(jwt: string, getKey: (keyId?: string) => string) {
     const signature = gensig(parts[0], parts[1], key);
     if (signature !== parts[2]) { return; }
 
-    const content = decode(parts[1]) as Claims<T>;
+    const content = decode(parts[1]) as T;
     if (content.exp && content.exp < Date.now()) { return; }
     if (content.nbf && content.nbf > Date.now()) { return; }
 
