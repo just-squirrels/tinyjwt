@@ -7,7 +7,7 @@ type Header = {
 
 export type Claims<T = void> = {
     sub: string;
-    exp: string;
+    exp: number;
     iss?: string;
     aud?: string;
     nbf?: number;
@@ -39,7 +39,11 @@ export function verify<T>(jwt: string, getKey: (keyId?: string) => string) {
     const signature = gensig(parts[0], parts[1], key);
     if (signature !== parts[2]) { return; }
 
-    return decode(parts[1]) as Claims<T>;
+    const content = decode(parts[1]) as Claims<T>;
+    if (content.exp < Date.now()) { return; }
+    if (content.nbf && content.nbf > Date.now()) { return; }
+
+    return content;
 }
 
 export default { sign, verify };
